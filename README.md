@@ -3,11 +3,11 @@
 Proyecto Efectuado por:
     Franco Sagot López - 2022211182
 
-## Especificaciónes de cómo se efectuó el programa
+# Especificaciónes de cómo se efectuó el programa
   * Python 3.10.2 64bit
-  * Librerías: TKinter, Pygame
+  * Librerías: TKinter, Pygame, Random, sys
 
-## Contenidos
+# Contenidos
   * Nuevos Sprites y animaciones
   * Niveles clásicos remasterizados
   * Sonidos Clásicos del Juego original
