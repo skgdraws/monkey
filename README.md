@@ -1,7 +1,6 @@
 # Monkey - Primer Proyecto de Introducción de Programación
 
-Proyecto Efectuado por:
-    Franco Sagot López - 2022211182
+## Proyecto Efectuado por: Franco Sagot López - 2022211182
 
 ### Especificaciónes de cómo se efectuó el programa
   * Python 3.10.2 64bit
