@@ -1,5 +1,5 @@
 import pygame
-from tiles import Tile
+from tiles import Ladder, Tile
 from settings import tile_size
 from player import Player
 
@@ -14,6 +14,7 @@ class Level:
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
+        self.ladders = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
 
         for row_index, row in enumerate(layout):    #Checks every row of the level Data
@@ -25,6 +26,10 @@ class Level:
                 if cell == 'X':
                     tile = Tile((x,y), tile_size)
                     self.tiles.add(tile)
+                
+                if cell == 'H':
+                    ladder = Ladder((x,y), tile_size)
+                    self.ladders.add(ladder)
 
                 if cell == 'P':     #Checks for the Player Position
                     player_sprite = Player((x,y))
@@ -79,6 +84,7 @@ class Level:
     def run(self):
         #Level Tiles
         self.tiles.draw(self.display_surface)
+        self.ladders.draw(self.display_surface)
         #Player 
         self.player.update()
         self.horizontal_movement_collision()

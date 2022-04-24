@@ -52,11 +52,24 @@ class Player(pygame.sprite.Sprite):
             flipped_image = pygame.transform.flip(image, True, False)
             self.image = flipped_image
 
-        # if self.isGrounded:
-        #     self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+        #Setting the Rect
+        if self.isGrounded and self.onRight:
+            self.rect = self.image.get_rect(bottomright = self.rect.bottomright)
+        
+        elif self.isGrounded and self.onLeft:
+            self.rect = self.image.get_rect(bottomleft = self.rect.bottomleft)
 
-        # elif self.onCeiling:
-        #     self.rect = self.image.get_rect(midtop = self.rect.midtop)
+        elif self.isGrounded:
+            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+
+        elif self.onCeiling and self.onRight:
+            self.rect = self.image.get_rect(topright = self.rect.topright)
+        
+        elif self.onCeiling and self.onLeft:
+            self.rect = self.image.get_rect(topleft = self.rect.topleft)
+
+        elif self.onCeiling:
+            self.rect = self.image.get_rect(midtop = self.rect.midtop)
 
         # else:
         #     self.rect = self.image.get_rect(center = self.rect.midtop)
