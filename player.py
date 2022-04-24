@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         
         #imports the sprites
-        self.char_name = "m00n"
+        self.char_name = "skg"
         self.import_character_assets()
         self.frame_index = 0
         self.animationSpeed = 0.15
@@ -26,7 +26,8 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 1
         self.gravity = 0.3
-        self.jump_height = -4
+        self.jump_height = -8
+        # self.jump_height = -4
 
     def import_character_assets(self):
         char_path = f'images/{self.char_name}/'

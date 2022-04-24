@@ -1,4 +1,4 @@
-level1 = [
+level_data = [
     '                            ',
     '                            ',
     '        XXXXXX              ',
@@ -36,4 +36,3 @@ level1 = [
 tile_size = 16
 screen_width = 448
 screen_height = 512
-print(screen_height)

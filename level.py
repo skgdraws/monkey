@@ -81,6 +81,10 @@ class Level:
             if player.onCeiling and player.direction.y > 0:
                 player.onCeiling = False
 
+        for sprite in self.ladders.sprites():
+            if sprite.rect.colliderect(player.rect):
+                pass
+
     def run(self):
         #Level Tiles
         self.tiles.draw(self.display_surface)
