@@ -1,7 +1,8 @@
 import pygame
 from tiles import Ladder, Tile
-from settings import tile_size
+from settings import tile_size, screen_height, screen_width
 from player import Player
+from game_data import levels
 
 class Level:
     def __init__(self, level_data, surface):
@@ -94,3 +95,32 @@ class Level:
         self.horizontal_movement_collision()
         self.vertical_movement_collision()
         self.player.draw(self.display_surface)
+
+class test_level:
+    def __init__(self, curlevel, surface, create_overworld):
+        
+        #Level Setup
+        self.surface = surface
+        self.curLevel = curlevel
+        self.create_overworld = create_overworld
+
+        level_data = levels[curlevel]
+        level_content = level_data['content']
+        self.new_max_level = level_data['unlock']
+
+        self.font = pygame.font.Font('font/W95FA.otf', 15)
+        self.text_surf = self.font.render(level_content, True, 'White')
+        self.text_rect = self.text_surf.get_rect(center = (screen_width/2, screen_height/2))
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE]:
+            self.create_overworld(self.curLevel, self.new_max_level)
+
+        elif keys[pygame.K_RETURN]:
+            self.create_overworld(self.curLevel, 0)
+
+    def run(self):
+        self.input()
+        self.surface.blit(self.text_surf, self.text_rect)
