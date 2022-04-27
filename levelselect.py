@@ -1,22 +1,25 @@
 import pygame
 from game_data import levels
+from support import import_folder
 
 class Node(pygame.sprite.Sprite):
 
-    def __init__(self, pos, status, icon_speed):
+    def __init__(self, pos, status, icon_speed, path):
         super().__init__()
 
-        self.image = pygame.Surface((100,25))
-
+        self.image = pygame.image.load(path)
         if status == 'unlock':
-            self.image.fill('dark blue')
+            self.status = 'available'
 
         else:
-            self.image.fill('dark red')
+            self.image.fill('#111111')
+            self.status = 'locked'
 
         self.rect = self.image.get_rect(center = pos)
-
         self.detection_zone = pygame.Rect(self.rect.centerx-(icon_speed/2), self.rect.centery-(icon_speed/2), icon_speed, icon_speed)
+
+    def animate(self):
+        pass
 
 class Icon(pygame.sprite.Sprite):
 
@@ -24,11 +27,23 @@ class Icon(pygame.sprite.Sprite):
         super().__init__()
         self.pos = pos
 
-        self.image = pygame.Surface((16,16))
-        self.image.fill('gold')
+        self.animation = import_folder("images/skg/run")
+        self.frame_index = 0
+        self.animationSpeed = 0.15
+        self.image = self.animation[0]
         self.rect = self.image.get_rect(center = pos)
 
+    def animate(self):
+        # Looping the animation
+        self.frame_index += self.animationSpeed
+
+        if self.frame_index >= len(self.animation):
+            self.frame_index = 0
+
+        self.image = self.animation[int(self.frame_index)]
+
     def update(self):
+        self.animate()
         self.rect.center = self.pos
 
 class Overworld:
@@ -52,22 +67,28 @@ class Overworld:
         self.setup_nodes()
         self.setup_icon()
 
+        # Time
+        self.startTime = pygame.time.get_ticks()
+        self.allowInput = False
+        self.timerLength = 300
+
     def setup_nodes(self):
         self.nodes = pygame.sprite.Group()
 
         for index, node_data in enumerate(levels.values()):
 
             if index <= self.max_level:
-                node_sprite = Node(node_data['node_pos'], "unlock", self.speed)
+                node_sprite = Node(node_data['node_pos'], "unlock", self.speed, node_data['node_icon'])
                 self.nodes.add(node_sprite)
 
             else:
-                node_sprite = Node(node_data['node_pos'], "lock", self.speed)
+                node_sprite = Node(node_data['node_pos'], "lock", self.speed, node_data['node_icon'])
                 self.nodes.add(node_sprite)
 
     def draw_paths(self):
-        points = [node["node_pos"] for index, node in enumerate(levels.values()) if index <= self.max_level]
-        pygame.draw.lines(self.display, "dark blue", False, points, 6)
+        if self.max_level != 0:
+            points = [node["node_pos"] for index, node in enumerate(levels.values()) if index <= self.max_level]
+            pygame.draw.lines(self.display, "dark red", False, points, 6)
 
     def setup_icon(self):
         self.icon = pygame.sprite.GroupSingle()
@@ -77,18 +98,16 @@ class Overworld:
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if not self.moving:
+        if not self.moving and self.allowInput:
             if keys[pygame.K_w] or keys[pygame.K_UP]:
                 if self.current_level < self.max_level:
                     self.move_direction = self.get_movement_data('up')
-                    print(self.move_direction)
                     self.current_level += 1
                     self.moving = True
                 
             elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
                 if self.current_level > 0:
                     self.move_direction = self.get_movement_data('down')
-                    print(self.move_direction)
                     self.current_level -= 1
                     self.moving = True
 
@@ -127,7 +146,15 @@ class Overworld:
                 self.moving = False
                 self.move_direction = pygame.math.Vector2(0,0)
 
+    def input_timer(self):
+
+        if not self.allowInput:
+            currentTime = pygame.time.get_ticks()
+            if currentTime - self.startTime >= self.timerLength:
+                self.allowInput = True
+
     def run(self):
+        self.input_timer()
         self.input()
         self.update_icon_pos()
         self.icon.update()

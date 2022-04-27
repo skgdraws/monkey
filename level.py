@@ -1,40 +1,102 @@
+from re import T
 import pygame
-from tiles import Ladder, Tile
+from enemy import Enemy
+from tiles import Saved, StaticTile, Tile
 from settings import tile_size, screen_height, screen_width
 from player import Player
 from game_data import levels
+from support import import_csv_layout, import_cut_graphics
 
 class Level:
-    def __init__(self, level_data, surface):
+    def __init__(self, curLevel, surface, create_overworld, update_score, update_lives):
         
         #Sets up the Levels
         self.display_surface = surface
-        self.setup_level(level_data)
-        self.world_shift = 0
-        self.currentX = 0
+        self.world_shift = 2
 
-    def setup_level(self, layout):
-        self.tiles = pygame.sprite.Group()
-        self.ladders = pygame.sprite.Group()
+        #Overworld connection
+        self.create_overworld = create_overworld
+        self.current_level = curLevel
+        level_data = levels[self.current_level]
+        self.new_maxLevel = level_data['unlock']
+
+        #UI
+        self.update_score = update_score
+        self.update_lives = update_lives
+
+        #Player
+        player_layout = import_csv_layout(level_data['player'])
         self.player = pygame.sprite.GroupSingle()
+        self.goal = pygame.sprite.GroupSingle()
+        self.player_setup(player_layout)
 
-        for row_index, row in enumerate(layout):    #Checks every row of the level Data
-            
-            for col_index, cell in enumerate(row):  #Checks the columns in the "matrix"
+        # Sets up terrain
+        terrain_layout = import_csv_layout(level_data['ground'])
+        self.terrain_sprites = self.create_tile_group(terrain_layout, 'ground')
+        
+        oil_layout = import_csv_layout(level_data['decor'])
+        self.oil_sprites = self.create_tile_group(oil_layout, 'decor')
+
+        #Sets up Enemies
+        enemy_layout = import_csv_layout(level_data['enemies'])
+        self.enemy_sprites = self.create_tile_group(enemy_layout, 'enemies')
+
+        #Sets up Constraints
+        constraints_layout = import_csv_layout(level_data['constraints'])
+        self.constraints_sprites = self.create_tile_group(constraints_layout, 'constraints')
+
+    def create_tile_group(self, layout, sprite_name):
+        sprite_group = pygame.sprite.Group()
+
+        for row_index, row in enumerate(layout):
+            for col_index, val in enumerate(row):
+                
+                if val != "-1":
+                    x = col_index * tile_size
+                    y = row_index * tile_size
+
+                    if sprite_name == 'ground':
+                        terrain_tile_list = import_cut_graphics('images/tiles/ground1.png')
+                        tile_surface = terrain_tile_list[int(val)]
+                        sprite = StaticTile((x,y), tile_size, tile_surface)
+
+                    if sprite_name == 'decor':
+                        oil_tile_list = import_cut_graphics('images/tiles/decor.png')
+                        tile_surface = oil_tile_list[int(val)]
+                        sprite = StaticTile((x,y), tile_size, tile_surface)
+                    
+                    if sprite_name == 'enemies':
+                        sprite = Enemy((x, y), tile_size)
+
+                    if sprite_name == 'constraints':
+                        sprite = Tile((x, y), tile_size)
+
+                    sprite_group.add(sprite)
+
+        return sprite_group
+
+    def player_setup(self, layout):
+
+        for row_index, row in enumerate(layout):
+            for col_index, val in enumerate(row):
+                
                 x = col_index * tile_size
                 y = row_index * tile_size
-
-                if cell == 'X':
-                    tile = Tile((x,y), tile_size)
-                    self.tiles.add(tile)
                 
-                if cell == 'H':
-                    ladder = Ladder((x,y), tile_size)
-                    self.ladders.add(ladder)
+                if val == "0":
+                    sprite = Player((x,y))
+                    self.player.add(sprite)
 
-                if cell == 'P':     #Checks for the Player Position
-                    player_sprite = Player((x,y))
-                    self.player.add(player_sprite)
+                if val == "1":
+                    saved_sprite = pygame.image.load('images/m00n/idle/m00n-idle.png')
+                    sprite = Saved((x, y), tile_size, saved_sprite)
+                    self.goal.add(sprite)
+
+    def enemy_fall_reverse(self):
+        for enemy in self.enemy_sprites.sprites():
+
+            if pygame.sprite.spritecollide(enemy,self.constraints_sprites,False):
+                enemy.reverse()	
 
     def horizontal_movement_collision(self):
         player = self.player.sprite
@@ -42,7 +104,8 @@ class Level:
         #sets the movement of the playable character
         player.rect.x += player.direction.x * player.speed
 
-        for sprite in self.tiles.sprites():
+        for sprite in self.terrain_sprites.sprites():
+
             if sprite.rect.colliderect(player.rect):
                 if player.direction.x < 0:  # Checks collision on the left side of the player
                     player.rect.left = sprite.rect.right
@@ -64,12 +127,13 @@ class Level:
         player = self.player.sprite
         player.apply_gravity()
 
-        for sprite in self.tiles.sprites():
+        for sprite in self.terrain_sprites.sprites():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.y > 0:  # Checks collision on the bottom of the player
                     player.rect.bottom = sprite.rect.top
                     player.direction.y = 0
                     player.isGrounded = True
+                    player.gotPoints = False
 
                 elif player.direction.y < 0:  # Checks collision on the top of the player
                     player.rect.top = sprite.rect.bottom
@@ -82,45 +146,98 @@ class Level:
             if player.onCeiling and player.direction.y > 0:
                 player.onCeiling = False
 
-        for sprite in self.ladders.sprites():
-            if sprite.rect.colliderect(player.rect):
-                pass
+    def check_death(self):
+        if self.player.sprite.rect.top > screen_height or self.player.sprite.died:
+            self.update_lives(-1)
+            self.create_overworld(self.current_level, 0)
+
+    def check_win(self):
+        if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
+            self.create_overworld(self.current_level, self.new_maxLevel)
+
+    def check_enemy_collisions(self):
+        
+        enemy_collisions = pygame.sprite.spritecollide(self.player.sprite, self.enemy_sprites, False)
+        
+        for enemy in self.enemy_sprites:
+            
+            if enemy.detection_zone.collidepoint(self.player.sprite.rect.center) and not self.player.sprite.gotPoints and not self.player.sprite.isGrounded:
+                self.update_score(100)
+                self.player.sprite.gotPoints = True
+
+        if enemy_collisions:
+            for enemy in enemy_collisions:
+                self.player.sprite.died = True
+
+    def scroll_x(self):
+
+        player = self.player.sprite
+        player_x = player.rect.centerx
+        direction_x = player.direction.x
+
+        if player_x < 150 and direction_x < 0:
+            self.world_shift = 2
+            player.speed = 0
+        
+        elif player_x > 300 and direction_x > 0:
+            self.world_shift = -2
+            player.speed = 0
+
+        else:
+            self.world_shift = 0
+            player.speed = 2  
 
     def run(self):
-        #Level Tiles
-        self.tiles.draw(self.display_surface)
-        self.ladders.draw(self.display_surface)
-        #Player 
+        self.terrain_sprites.update(self.world_shift)
+        self.terrain_sprites.draw(self.display_surface)
+
+        self.oil_sprites.update(self.world_shift)
+        self.oil_sprites.draw(self.display_surface)
+
+        self.constraints_sprites.update(self.world_shift)
+        self.enemy_sprites.update(self.world_shift)
+        self.enemy_fall_reverse()
+        self.enemy_sprites.draw(self.display_surface)
+
+        self.goal.update(self.world_shift)
+        self.goal.draw(self.display_surface)
+        
+        self.scroll_x()
         self.player.update()
         self.horizontal_movement_collision()
         self.vertical_movement_collision()
         self.player.draw(self.display_surface)
 
-class test_level:
-    def __init__(self, curlevel, surface, create_overworld):
+        self.check_enemy_collisions()
+
+        self.check_death()
+        self.check_win()
+
+# class test_level:
+#     def __init__(self, curlevel, surface, create_overworld):
         
-        #Level Setup
-        self.surface = surface
-        self.curLevel = curlevel
-        self.create_overworld = create_overworld
+#         #Level Setup
+#         self.surface = surface
+#         self.curLevel = curlevel
+#         self.create_overworld = create_overworld
 
-        level_data = levels[curlevel]
-        level_content = level_data['content']
-        self.new_max_level = level_data['unlock']
+#         level_data = levels[curlevel]
+#         level_content = level_data['content']
+#         self.new_max_level = level_data['unlock']
 
-        self.font = pygame.font.Font('font/W95FA.otf', 15)
-        self.text_surf = self.font.render(level_content, True, 'White')
-        self.text_rect = self.text_surf.get_rect(center = (screen_width/2, screen_height/2))
+#         self.font = pygame.font.Font('font/W95FA.otf', 15)
+#         self.text_surf = self.font.render(level_content, True, 'White')
+#         self.text_rect = self.text_surf.get_rect(center = (screen_width/2, screen_height/2))
 
-    def input(self):
-        keys = pygame.key.get_pressed()
+#     def input(self):
+#         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE]:
-            self.create_overworld(self.curLevel, self.new_max_level)
+#         if keys[pygame.K_SPACE]:
+#             self.create_overworld(self.curLevel, self.new_max_level)
 
-        elif keys[pygame.K_RETURN]:
-            self.create_overworld(self.curLevel, 0)
+#         elif keys[pygame.K_RETURN]:
+#             self.create_overworld(self.curLevel, 0)
 
-    def run(self):
-        self.input()
-        self.surface.blit(self.text_surf, self.text_rect)
+#     def run(self):
+#         self.input()
+#         self.surface.blit(self.text_surf, self.text_rect)

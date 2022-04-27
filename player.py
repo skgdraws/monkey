@@ -23,11 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.onCeiling = False
         self.onRight = False
         self.onLeft = False
+        self.died = False
+        self.gotPoints = False
         self.direction = pygame.math.Vector2(0, 0)
-        self.speed = 1
+        self.speed = 2
         self.gravity = 0.3
-        self.jump_height = -8
-        # self.jump_height = -4
+        # self.jump_height = -8
+        self.jump_height = -6
 
     def import_character_assets(self):
         char_path = f'images/{self.char_name}/'
