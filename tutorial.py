@@ -125,7 +125,8 @@ pygame.init()
 #Sets the Screen Size and Icon
 screen = pygame.display.set_mode((448, 512))
 pygame.display.set_caption("Monke")
-#pygame.display.set_icon("icon.ico")
+icon = pygame.image.load('icon.png')
+pygame.display.set_icon(icon)
 game_active = False
 
 #This helps us set the Framerate

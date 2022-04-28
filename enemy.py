@@ -11,8 +11,7 @@ class Enemy(AnimatedTile):
         self.gravity = 0.3
 
         hitbox = pygame.Surface((16, 32))
-        # self.detection_zone = pygame.Rect(self.rect.x, self.rect.y - 20, self.image.get_size()[0] * 2, self.image.get_size()[1] * 2)
-        self.detection_zone = hitbox.get_rect(midbottom = (self.rect.x, self.rect.y + 10))
+        self.detection_zone = hitbox.get_rect(midtop = (self.rect.x, self.rect.y - 15))
 
     def move(self):
         self.rect.x += self.speed
@@ -26,13 +25,8 @@ class Enemy(AnimatedTile):
     def reverse(self):
         self.speed *= -1
         
-    # def apply_gravity(self):
-    #     self.direction.y += self.gravity
-    #     self.rect.y += self.direction.y
-
     def update(self, shift):
         self.rect.x += shift
         self.animate()
-        # self.apply_gravity()
         self.move()
         self.reverse_image()

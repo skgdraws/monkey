@@ -23,11 +23,12 @@ class Node(pygame.sprite.Sprite):
 
 class Icon(pygame.sprite.Sprite):
 
-    def __init__(self, pos):
+    def __init__(self, pos, player_name):
         super().__init__()
         self.pos = pos
 
-        self.animation = import_folder("images/skg/run")
+        self.player_name = player_name
+        self.animation = import_folder(f"images/{player_name}/run")
         self.frame_index = 0
         self.animationSpeed = 0.15
         self.image = self.animation[0]
@@ -48,7 +49,7 @@ class Icon(pygame.sprite.Sprite):
 
 class Overworld:
 
-    def __init__(self, start_level, max_level, surface, create_level):
+    def __init__(self, start_level, max_level, surface, create_level, player_name):
         
         #Setting up the surface to be displayed
         self.display = surface
@@ -57,6 +58,7 @@ class Overworld:
         self.max_level = max_level
         self.current_level = start_level
         self.create_level = create_level
+        self.player_name = player_name
 
         #movement logic
         self.move_direction = pygame.math.Vector2(0,0)
@@ -92,7 +94,7 @@ class Overworld:
 
     def setup_icon(self):
         self.icon = pygame.sprite.GroupSingle()
-        icon_sprite = Icon(self.nodes.sprites()[self.current_level].rect.center)
+        icon_sprite = Icon(self.nodes.sprites()[self.current_level].rect.center, self.player_name)
         self.icon.add(icon_sprite)
 
     def input(self):
@@ -113,15 +115,6 @@ class Overworld:
 
             elif keys[pygame.K_SPACE] or keys[pygame.K_RETURN]:
                 self.create_level(self.current_level)
-
-        # Old imput
-        # if keys[pygame.K_w] or keys[pygame.K_UP]:
-        #     if self.current_level < self.max_level:
-        #         self.current_level += 1
-            
-        # elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
-        #     if self.current_level > 0:
-        #         self.current_level -= 1
 
     def get_movement_data(self, dir_icon):
 

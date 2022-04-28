@@ -3,11 +3,11 @@ from support import import_folder
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, pos):
+    def __init__(self, pos, player_name):
         super().__init__()
         
         #imports the sprites
-        self.char_name = "skg"
+        self.char_name = player_name
         self.import_character_assets()
         self.frame_index = 0
         self.animationSpeed = 0.15
@@ -28,7 +28,6 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 2
         self.gravity = 0.3
-        # self.jump_height = -8
         self.jump_height = -6
 
     def import_character_assets(self):
@@ -73,10 +72,6 @@ class Player(pygame.sprite.Sprite):
 
         elif self.onCeiling:
             self.rect = self.image.get_rect(midtop = self.rect.midtop)
-
-        # else:
-        #     self.rect = self.image.get_rect(center = self.rect.midtop)
-
 
     def get_input(self):
         keys = pygame.key.get_pressed()    #We get all the possible inputs

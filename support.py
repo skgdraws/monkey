@@ -1,5 +1,5 @@
 from os import walk
-from csv import reader
+from csv import *
 from settings import tile_size
 import pygame
 
@@ -23,6 +23,17 @@ def import_csv_layout(path):
             terrain_map.append(list(row))
         return terrain_map
 
+def import_scores(path):
+    score_list = []
+    # Opening up the csv File
+    with open(path) as map:
+
+        scores = reader(map, delimiter = ',')
+        for row in scores:
+            score_list.append(list(row))
+            
+        return score_list
+
 def import_cut_graphics(path):
 
     surface = pygame.image.load(path).convert_alpha()
@@ -40,3 +51,12 @@ def import_cut_graphics(path):
             cut_tiles.append(new_surf)
 
     return cut_tiles
+
+def save_data(score, name):
+
+    file = open('data/scores.csv', "a", newline="")
+
+    data = (score, name)
+    data_writer = writer(file)
+    data_writer.writerow(data)
+    file.close()

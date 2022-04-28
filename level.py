@@ -1,4 +1,3 @@
-from re import T
 import pygame
 from enemy import Enemy
 from tiles import Saved, StaticTile, Tile
@@ -8,7 +7,7 @@ from game_data import levels
 from support import import_csv_layout, import_cut_graphics
 
 class Level:
-    def __init__(self, curLevel, surface, create_overworld, update_score, update_lives):
+    def __init__(self, curLevel, surface, create_overworld, update_score, update_lives, player_name):
         
         #Sets up the Levels
         self.display_surface = surface
@@ -27,6 +26,7 @@ class Level:
         #Player
         player_layout = import_csv_layout(level_data['player'])
         self.player = pygame.sprite.GroupSingle()
+        self.player_name = player_name
         self.goal = pygame.sprite.GroupSingle()
         self.player_setup(player_layout)
 
@@ -84,12 +84,18 @@ class Level:
                 y = row_index * tile_size
                 
                 if val == "0":
-                    sprite = Player((x,y))
+                    sprite = Player((x,y), self.player_name)
                     self.player.add(sprite)
 
                 if val == "1":
-                    saved_sprite = pygame.image.load('images/m00n/idle/m00n-idle.png')
-                    sprite = Saved((x, y), tile_size, saved_sprite)
+
+                    if self.player_name == 'skg':
+                        saved_sprite = pygame.image.load('images/m00n/idle/m00n-idle.png')
+                    else:
+                        saved_sprite = pygame.image.load('images/skg/idle/skg-idle.png')
+
+                    sprite = Saved((x, y - 2), tile_size, saved_sprite)
+                    self.update_score(500)
                     self.goal.add(sprite)
 
     def enemy_fall_reverse(self):
@@ -149,11 +155,11 @@ class Level:
     def check_death(self):
         if self.player.sprite.rect.top > screen_height or self.player.sprite.died:
             self.update_lives(-1)
-            self.create_overworld(self.current_level, 0)
+            self.create_overworld(self.current_level, 0, self.player_name)
 
     def check_win(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
-            self.create_overworld(self.current_level, self.new_maxLevel)
+            self.create_overworld(self.current_level, self.new_maxLevel, self.player_name)
 
     def check_enemy_collisions(self):
         
@@ -168,6 +174,7 @@ class Level:
         if enemy_collisions:
             for enemy in enemy_collisions:
                 self.player.sprite.died = True
+
 
     def scroll_x(self):
 
@@ -212,32 +219,3 @@ class Level:
 
         self.check_death()
         self.check_win()
-
-# class test_level:
-#     def __init__(self, curlevel, surface, create_overworld):
-        
-#         #Level Setup
-#         self.surface = surface
-#         self.curLevel = curlevel
-#         self.create_overworld = create_overworld
-
-#         level_data = levels[curlevel]
-#         level_content = level_data['content']
-#         self.new_max_level = level_data['unlock']
-
-#         self.font = pygame.font.Font('font/W95FA.otf', 15)
-#         self.text_surf = self.font.render(level_content, True, 'White')
-#         self.text_rect = self.text_surf.get_rect(center = (screen_width/2, screen_height/2))
-
-#     def input(self):
-#         keys = pygame.key.get_pressed()
-
-#         if keys[pygame.K_SPACE]:
-#             self.create_overworld(self.curLevel, self.new_max_level)
-
-#         elif keys[pygame.K_RETURN]:
-#             self.create_overworld(self.curLevel, 0)
-
-#     def run(self):
-#         self.input()
-#         self.surface.blit(self.text_surf, self.text_rect)
