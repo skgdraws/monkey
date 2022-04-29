@@ -6,7 +6,7 @@ from support import save_data, import_scores
 def game_over(score):
 
     window = tk.Tk()
-    window.title("Taller de Interfaz Gráfica")
+    window.title("Save Your Highscore!")
     window.geometry("448x512")
     window.iconbitmap( str(pathlib.Path().resolve()) + "\icon.ico")
     window.resizable(False, False)
@@ -42,7 +42,7 @@ def game_over(score):
 def hall_of_fame():
 
     window = tk.Tk()
-    window.title("Taller de Interfaz Gráfica")
+    window.title("Hall of Fame")
     window.geometry("448x512")
     window.iconbitmap( str(pathlib.Path().resolve()) + "\icon.ico")
     window.resizable(False, False)

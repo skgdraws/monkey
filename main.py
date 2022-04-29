@@ -22,7 +22,7 @@ class Game:
         self.player = 'skg'
 
         #audio
-        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.wav")
+        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.ogg")
         self.bg_music.set_volume(0.1)
 
         #States
@@ -39,9 +39,6 @@ class Game:
         self.status = 'level'
 
     def create_overworld(self, curLevel, new_max_level, player):
-        
-        if curLevel > new_max_level:
-            curLevel = new_max_level
         
         if new_max_level > self.max_level:
             self.max_level = new_max_level
