@@ -18,12 +18,18 @@ class Game:
         self.savedscore = 0
         self.screen = screen
         self.display = pygame.Rect(0, 0, screen_width, screen_height)
+        self.allowInput = True
         self.player = 'skg'
+
+        #audio
+        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.wav")
+        self.bg_music.set_volume(0.1)
 
         #States
         self.overworld = Overworld(0, self.max_level, self.screen, self.create_level, self.player)
         self.mainMenu = MainMenu(self.screen, self.create_overworld)
         self.status = 'main menu'
+        self.bg_music.play(loops= -1)
 
         #UI
         self.ui = UI(screen)
@@ -93,6 +99,7 @@ icon = pygame.image.load('images/skg-icon.png')
 pygame.display.set_icon(icon)
 
 game = Game(screen)
+game.allowInput = True
 
 while True:
 
@@ -100,6 +107,13 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                game.allowInput = True
+
+            if event.key == pygame.K_DOWN:
+                game.allowInput = True
 
     screen.fill("#000000")
     game.run()

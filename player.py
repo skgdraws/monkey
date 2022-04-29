@@ -1,5 +1,6 @@
 import pygame
 from support import import_folder
+from random import randint
 
 class Player(pygame.sprite.Sprite):
 
@@ -16,6 +17,16 @@ class Player(pygame.sprite.Sprite):
         self.state = 'idle'
         self.image = self.animations["idle"][self.frame_index]
         self.rect = self.image.get_rect(topleft = pos) 
+
+        # Audio
+        self.jump_sound1 = pygame.mixer.Sound("audio/sfx/jump.wav")
+        self.jump_sound1.set_volume(0.5)
+        self.jump_sound2 = pygame.mixer.Sound("audio/sfx/jump2.wav")
+        self.jump_sound2.set_volume(0.5)
+        self.jump_sound3 = pygame.mixer.Sound("audio/sfx/jump3.wav")
+        self.jump_sound3.set_volume(0.5)
+
+        self.jump_sounds = [self.jump_sound1, self.jump_sound2, self.jump_sound3]
 
         #Player Movement
         self.facing_right = True
@@ -108,6 +119,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
+        list_index = randint(0,2)
+
+        self.jump_sounds[list_index].play()
         self.direction.y = self.jump_height
 
     def update(self):

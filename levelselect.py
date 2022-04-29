@@ -54,6 +54,12 @@ class Overworld:
         #Setting up the surface to be displayed
         self.display = surface
 
+        #Audio
+        self.cursor_sound = pygame.mixer.Sound("audio/sfx/move_cursor.wav")
+        self.cursor_sound.set_volume(0.5)
+        self.select_sound = pygame.mixer.Sound("audio/sfx/select.wav")
+        self.select_sound.set_volume(0.5)
+
         #Level Logic
         self.max_level = max_level
         self.current_level = start_level
@@ -72,7 +78,7 @@ class Overworld:
         # Time
         self.startTime = pygame.time.get_ticks()
         self.allowInput = False
-        self.timerLength = 300
+        self.timerLength = 500
 
     def setup_nodes(self):
         self.nodes = pygame.sprite.Group()
@@ -114,6 +120,7 @@ class Overworld:
                     self.moving = True
 
             elif keys[pygame.K_SPACE] or keys[pygame.K_RETURN]:
+                self.select_sound.play()
                 self.create_level(self.current_level)
 
     def get_movement_data(self, dir_icon):
@@ -138,6 +145,7 @@ class Overworld:
             if target.detection_zone.collidepoint(self.icon.sprite.pos):
                 self.moving = False
                 self.move_direction = pygame.math.Vector2(0,0)
+                self.cursor_sound.play()
 
     def input_timer(self):
 

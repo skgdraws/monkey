@@ -19,7 +19,7 @@ def game_over(score):
     logo = ImageTk.PhotoImage(Image.open('images/Logo.png'))
     screen.create_image(10, 80, anchor = tk.NW, image= logo)
 
-    Label1 = tk.Label(screen, text='Your Score is\n' + str(score) + 'points', font=('Kongtext', 10), bg="#000000", fg="#ffffff")
+    Label1 = tk.Label(screen, text='Your Score is\n' + str(score) + 'points', font=('Kongtext', 15), bg="#000000", fg="#ffffff")
     Label1.place(x= 84, y= 230)
 
     var = tk.StringVar()

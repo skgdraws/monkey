@@ -13,6 +13,12 @@ class Level:
         self.display_surface = surface
         self.world_shift = 2
 
+        #Audio
+        self.win_sound = pygame.mixer.Sound("audio/sfx/win.wav")
+        self.win_sound.set_volume(0.6)
+        self.hit_sound = pygame.mixer.Sound("audio/sfx/hurt.wav")
+        self.hit_sound.set_volume(0.6)
+
         #Overworld connection
         self.create_overworld = create_overworld
         self.current_level = curLevel
@@ -159,6 +165,7 @@ class Level:
 
     def check_win(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):
+            self.win_sound.play()
             self.create_overworld(self.current_level, self.new_maxLevel, self.player_name)
 
     def check_enemy_collisions(self):
@@ -174,6 +181,7 @@ class Level:
         if enemy_collisions:
             for enemy in enemy_collisions:
                 self.player.sprite.died = True
+                self.hit_sound.play()
 
 
     def scroll_x(self):
