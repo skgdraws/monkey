@@ -85,10 +85,10 @@ class Obstacle(pygame.sprite.Sprite):
 
         else:
             #Obstacles
-            barrel_frame1 = pygame.image.load("images/barrel/barrel1.png").convert_alpha()
-            barrel_frame2 = pygame.image.load("images/barrel/barrel2.png").convert_alpha()
-            barrel_frame3 = pygame.image.load("images/barrel/barrel3.png").convert_alpha()
-            barrel_frame4 = pygame.image.load("images/barrel/barrel4.png").convert_alpha()
+            barrel_frame1 = pygame.image.load("images/barrel/normal/roll/barrel1.png").convert_alpha()
+            barrel_frame2 = pygame.image.load("images/barrel/normal/roll/barrel2.png").convert_alpha()
+            barrel_frame3 = pygame.image.load("images/barrel/normal/roll/barrel3.png").convert_alpha()
+            barrel_frame4 = pygame.image.load("images/barrel/normal/roll/barrel4.png").convert_alpha()
             self.frames = [barrel_frame1, barrel_frame2, barrel_frame3, barrel_frame4]
             ypos = 496
 
@@ -125,8 +125,8 @@ pygame.init()
 #Sets the Screen Size and Icon
 screen = pygame.display.set_mode((448, 512))
 pygame.display.set_caption("Monke")
-icon = pygame.image.load('icon.png')
-pygame.display.set_icon(icon)
+#icon = pygame.image.load('icon.png')
+#pygame.display.set_icon(icon)
 game_active = False
 
 #This helps us set the Framerate

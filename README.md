@@ -8,8 +8,8 @@
 
 ### Contenidos
   * Nuevos Sprites y animaciones
-  * Niveles clásicos remasterizados
-  * Sonidos Clásicos del Juego original
+  * Niveles con mecánicas distintas
+  * Sonidos Nuevos
 
 ### Referencias Usadas
   * The Ultimate Introduction to Pygame: https://www.youtube.com/watch?v=AY9MnQ4x3zk

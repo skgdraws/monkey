@@ -19,11 +19,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos) 
 
         # Audio
-        self.jump_sound1 = pygame.mixer.Sound("audio/sfx/jump.wav")
+        self.jump_sound1 = pygame.mixer.Sound("audio/sfx/jump.ogg")
         self.jump_sound1.set_volume(0.5)
-        self.jump_sound2 = pygame.mixer.Sound("audio/sfx/jump2.wav")
+        self.jump_sound2 = pygame.mixer.Sound("audio/sfx/jump2.ogg")
         self.jump_sound2.set_volume(0.5)
-        self.jump_sound3 = pygame.mixer.Sound("audio/sfx/jump3.wav")
+        self.jump_sound3 = pygame.mixer.Sound("audio/sfx/jump3.ogg")
         self.jump_sound3.set_volume(0.5)
 
         self.jump_sounds = [self.jump_sound1, self.jump_sound2, self.jump_sound3]

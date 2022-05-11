@@ -14,9 +14,9 @@ class Level:
         self.world_shift = 2
 
         #Audio
-        self.win_sound = pygame.mixer.Sound("audio/sfx/win.wav")
+        self.win_sound = pygame.mixer.Sound("audio/sfx/win.ogg")
         self.win_sound.set_volume(0.6)
-        self.hit_sound = pygame.mixer.Sound("audio/sfx/hurt.wav")
+        self.hit_sound = pygame.mixer.Sound("audio/sfx/hurt.ogg")
         self.hit_sound.set_volume(0.6)
 
         #Overworld connection

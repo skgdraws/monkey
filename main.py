@@ -22,7 +22,7 @@ class Game:
         self.player = 'skg'
 
         #audio
-        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.wav")
+        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.ogg")
         self.bg_music.set_volume(0.1)
 
         #States
