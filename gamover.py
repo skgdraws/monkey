@@ -16,7 +16,7 @@ def game_over(score):
     screen.place(x= 0, y= 0)
 
     #Placing the logo
-    logo = ImageTk.PhotoImage(Image.open('images/Logo.png'))
+    logo = ImageTk.PhotoImage(Image.open('assets/images/Logo.png'))
     screen.create_image(10, 80, anchor = tk.NW, image= logo)
 
     Label1 = tk.Label(screen, text='Your Score is\n' + str(score) + 'points', font=('Kongtext', 15), bg="#000000", fg="#ffffff")
@@ -52,7 +52,7 @@ def hall_of_fame():
     screen.place(x= 0, y= 0)
 
     #Placing the logo
-    logo = ImageTk.PhotoImage(Image.open('images/Logo.png'))
+    logo = ImageTk.PhotoImage(Image.open('assets/images/Logo.png'))
     screen.create_image(10, 30, anchor = tk.NW, image= logo)
 
     score1 = tk.Label(text=f"1st.", font=("Kongtext", 10), fg='#ffffff', bg="#000000")
@@ -67,8 +67,7 @@ def hall_of_fame():
     score5.place(x= 80, y= 360)
 
     def organize_score_list():
-        lista = import_scores("data/scores.csv")
-        print(lista)
+        lista = import_scores("assets/data/scores.csv")
         reorganize = []
 
         return organizar(lista, reorganize)

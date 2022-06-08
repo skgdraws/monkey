@@ -4,7 +4,7 @@ from tiles import AnimatedTile
 class Enemy(AnimatedTile):
 
     def __init__(self, pos, size):
-        super().__init__(pos, size, 'images/barrel/normal/roll')
+        super().__init__(pos, size, 'assets/images/barrel/normal/roll')
 
         self.rect.y += size - self.image.get_size()[1]
         self.speed = 1

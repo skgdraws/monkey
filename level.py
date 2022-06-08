@@ -14,9 +14,9 @@ class Level:
         self.world_shift = 2
 
         #Audio
-        self.win_sound = pygame.mixer.Sound("audio/sfx/win.ogg")
+        self.win_sound = pygame.mixer.Sound("assets/audio/sfx/win.ogg")
         self.win_sound.set_volume(0.6)
-        self.hit_sound = pygame.mixer.Sound("audio/sfx/hurt.ogg")
+        self.hit_sound = pygame.mixer.Sound("assets/audio/sfx/hurt.ogg")
         self.hit_sound.set_volume(0.6)
 
         #Overworld connection
@@ -62,12 +62,12 @@ class Level:
                     y = row_index * tile_size
 
                     if sprite_name == 'ground':
-                        terrain_tile_list = import_cut_graphics('images/tiles/ground1.png')
+                        terrain_tile_list = import_cut_graphics('assets/images/tiles/ground1.png')
                         tile_surface = terrain_tile_list[int(val)]
                         sprite = StaticTile((x,y), tile_size, tile_surface)
 
                     if sprite_name == 'decor':
-                        oil_tile_list = import_cut_graphics('images/tiles/decor.png')
+                        oil_tile_list = import_cut_graphics('assets/images/tiles/decor.png')
                         tile_surface = oil_tile_list[int(val)]
                         sprite = StaticTile((x,y), tile_size, tile_surface)
                     
@@ -96,9 +96,9 @@ class Level:
                 if val == "1":
 
                     if self.player_name == 'skg':
-                        saved_sprite = pygame.image.load('images/m00n/idle/m00n-idle.png')
+                        saved_sprite = pygame.image.load('assets/images/m00n/idle/m00n-idle.png')
                     else:
-                        saved_sprite = pygame.image.load('images/skg/idle/skg-idle.png')
+                        saved_sprite = pygame.image.load('assets/images/skg/idle/skg-idle.png')
 
                     sprite = Saved((x, y - 2), tile_size, saved_sprite)
                     self.update_score(500)
@@ -114,54 +114,45 @@ class Level:
         player = self.player.sprite
 
         #sets the movement of the playable character
-        player.rect.x += player.direction.x * player.speed
+        player.collisionRect.x += player.direction.x * player.speed
 
         for sprite in self.terrain_sprites.sprites():
 
-            if sprite.rect.colliderect(player.rect):
+            if sprite.rect.colliderect(player.collisionRect):
                 if player.direction.x < 0:  # Checks collision on the left side of the player
-                    player.rect.left = sprite.rect.right
+                    player.collisionRect.left = sprite.rect.right
                     player.onLeft = True
-                    self.currentX = player.rect.left
+                    # self.currentX = player.rect.left
 
                 elif player.direction.x > 0:  # Checks collision on the right side of the player
-                    player.rect.right = sprite.rect.left
+                    player.collisionRect.right = sprite.rect.left
                     player.onRight = True
-                    self.currentX = player.rect.right
-
-            if player.onLeft and (player.rect.left < self.currentX or player.direction.x >= 0):
-                player.onLeft = False
-
-            if player.onRight and (player.rect.right > self.currentX or player.direction.x <= 0):
-                player.onReft = False
+                    # self.currentX = player.rect.right
 
     def vertical_movement_collision(self):
         player = self.player.sprite
         player.apply_gravity()
 
         for sprite in self.terrain_sprites.sprites():
-            if sprite.rect.colliderect(player.rect):
+            if sprite.rect.colliderect(player.collisionRect):
                 if player.direction.y > 0:  # Checks collision on the bottom of the player
-                    player.rect.bottom = sprite.rect.top
+                    player.collisionRect.bottom = sprite.rect.top
                     player.direction.y = 0
                     player.isGrounded = True
                     player.gotPoints = False
 
                 elif player.direction.y < 0:  # Checks collision on the top of the player
-                    player.rect.top = sprite.rect.bottom
+                    player.collisionRect.top = sprite.rect.bottom
                     player.direction.y = 0
                     player.onCeiling = True
 
             if player.isGrounded and player.direction.y < 0 or player.direction.y > 1:
                 player.isGrounded = False
 
-            if player.onCeiling and player.direction.y > 0:
-                player.onCeiling = False
-
     def check_death(self):
         if self.player.sprite.rect.top > screen_height or self.player.sprite.died:
             self.update_lives(-1)
-            self.create_overworld(self.current_level, 0, self.player_name)
+            self.create_overworld(self.current_level, self.current_level, self.player_name)
 
     def check_win(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.goal, False):

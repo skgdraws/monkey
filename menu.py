@@ -9,9 +9,9 @@ class MainMenu:
         self.create_overworld = create_overworld
 
         #Audio
-        self.cursor_sound = pygame.mixer.Sound("audio/sfx/move_cursor.ogg")
+        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.ogg")
         self.cursor_sound.set_volume(0.5)
-        self.select_sound = pygame.mixer.Sound("audio/sfx/select.ogg")
+        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.ogg")
         self.select_sound.set_volume(0.5)
 
         #inputs
@@ -21,10 +21,10 @@ class MainMenu:
         self.allowInput = True
 
         # Font and text stuff
-        self.font = pygame.font.Font("font/kongtext.ttf", 15)
+        self.font = pygame.font.Font("assets/font/kongtext.ttf", 15)
 
         # Logo thing
-        self.logo_image = pygame.image.load("images/logo.png").convert_alpha()
+        self.logo_image = pygame.image.load("assets/images/logo.png").convert_alpha()
         self.logo_sprite = Logo(self.logo_image, (224, 80))
         self.logo = pygame.sprite.GroupSingle()
         self.logo.add(self.logo_sprite)
@@ -47,7 +47,7 @@ class MainMenu:
         self.music_credits_rect = self.music_credits.get_rect(center = (224, 500))
 
         # Cursor
-        self.icon_image = pygame.image.load("images/ui/life-icon.png")
+        self.icon_image = pygame.image.load("assets/images/ui/life-icon.png")
         self.offset = -50
         self.icon_rect = self.icon_image.get_rect(topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1] - 7))
 

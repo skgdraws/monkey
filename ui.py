@@ -7,11 +7,11 @@ class UI:
         #setup
         self.display_surf = surface
         #Lives
-        self.lives_icon = pygame.image.load('images/ui/life-icon.png').convert_alpha()
+        self.lives_icon = pygame.image.load('assets/images/ui/life-icon.png').convert_alpha()
         #Score
-        self.score_disp = pygame.image.load('images/ui/score.png').convert_alpha()
+        self.score_disp = pygame.image.load('assets/images/ui/score.png').convert_alpha()
         self.score_rect = self.score_disp.get_rect(topleft = (20, 30))
-        self.font = pygame.font.Font("font/kongtext.ttf", 15)
+        self.font = pygame.font.Font("assets/font/kongtext.ttf", 15)
 
     def show_lives(self, current):
 

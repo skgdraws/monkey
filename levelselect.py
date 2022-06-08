@@ -28,7 +28,7 @@ class Icon(pygame.sprite.Sprite):
         self.pos = pos
 
         self.player_name = player_name
-        self.animation = import_folder(f"images/{player_name}/run")
+        self.animation = import_folder(f"assets/images/{player_name}/run")
         self.frame_index = 0
         self.animationSpeed = 0.15
         self.image = self.animation[0]
@@ -55,9 +55,9 @@ class Overworld:
         self.display = surface
 
         #Audio
-        self.cursor_sound = pygame.mixer.Sound("audio/sfx/move_cursor.ogg")
+        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.ogg")
         self.cursor_sound.set_volume(0.5)
-        self.select_sound = pygame.mixer.Sound("audio/sfx/select.ogg")
+        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.ogg")
         self.select_sound.set_volume(0.5)
 
         #Level Logic

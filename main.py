@@ -22,7 +22,7 @@ class Game:
         self.player = 'skg'
 
         #audio
-        self.bg_music = pygame.mixer.Sound("audio/music/stack_overflow.ogg")
+        self.bg_music = pygame.mixer.Sound("assets/audio/music/stack_overflow.ogg")
         self.bg_music.set_volume(0.1)
 
         #States
@@ -89,13 +89,12 @@ class Game:
             hall_of_fame()
             self.status = 'main menu'
             
-
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Monkey")
 clock = pygame.time.Clock()
 
-icon = pygame.image.load('images/skg-icon.png')
+icon = pygame.image.load('assets/images/skg-icon.png')
 pygame.display.set_icon(icon)
 
 game = Game(screen)
