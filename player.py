@@ -119,9 +119,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
-        list_index = randint(0,2)
-
-        self.jump_sounds[list_index].play()
+        self.jump_sound1.play()
         self.direction.y = self.jump_height
 
     def update(self):
