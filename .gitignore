@@ -1,4 +1,5 @@
-## Exporting for the 
+## Exporting for the game + python cacheing
 build/*
 dist/*
 Monkey.spec
+__pycache__/*

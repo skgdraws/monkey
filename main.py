@@ -40,6 +40,9 @@ class Game:
 
     def create_overworld(self, curLevel, new_max_level, player):
         
+        if curLevel > new_max_level:
+            curLevel = new_max_level
+        
         if new_max_level > self.max_level:
             self.max_level = new_max_level
         
