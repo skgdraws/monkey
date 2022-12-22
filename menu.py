@@ -9,9 +9,9 @@ class MainMenu:
         self.create_overworld = create_overworld
 
         #Audio
-        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.ogg")
+        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.wav")
         self.cursor_sound.set_volume(0.5)
-        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.ogg")
+        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.wav")
         self.select_sound.set_volume(0.5)
 
         #inputs
@@ -41,32 +41,33 @@ class MainMenu:
         self.m00n_text_rect = self.m00n_text.get_rect(topleft = self.m00n_pos)
 
         # Credits
-        self.credits = self.font.render("Made by Franco Sagot - 2022", False, "#FFFFFF")
+        self.credits = self.font.render("Made by SKG Art", False, "#FFFFFF")
         self.credits_rect = self.credits.get_rect(center = (224, 480))
         self.music_credits = self.font.render("Music by Lil Tico", False, "#FFFFFF")
         self.music_credits_rect = self.music_credits.get_rect(center = (224, 500))
 
         # Cursor
-        self.icon_image = pygame.image.load("assets/images/ui/life-icon.png")
+        self.icon_image = pygame.image.load("assets/images/ui/life-icon-skg.png")
         self.offset = -50
-        self.icon_rect = self.icon_image.get_rect(topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1] - 7))
+        self.icon_rect = self.icon_image.get_rect(topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1] - 10))
 
     def inputs(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             self.up_key = True
 
-        elif keys[pygame.K_DOWN]:
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
             self.down_key = True
             
-        elif keys[pygame.K_RETURN]:
+        elif keys[pygame.K_SPACE] or keys[pygame.K_RETURN]:
             self.enter = True
 
     def reset_inputs(self):
         self.up_key = False
         self.down_key = False
         self.enter = False
+        pygame.time.delay(100)
 
     def check_input(self):
         if self.enter:
@@ -82,27 +83,35 @@ class MainMenu:
         
         if self.down_key and self.allowInput:
             if self.state == 'skg':
-                self.icon_rect.topleft = (self.m00n_pos[0] + self.offset, self.m00n_pos[1])
+                self.icon_image = pygame.image.load("assets/images/ui/life-icon-m00n.png")
+                self.icon_rect.topleft = (self.m00n_pos[0] + self.offset, self.m00n_pos[1] - 10)
                 self.state = 'm00n'
                 self.cursor_sound.play()
+                self.reset_inputs()
 
             elif self.state == 'm00n':
-                self.icon_rect.topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1])
+                self.icon_image = pygame.image.load("assets/images/ui/life-icon-skg.png")
+                self.icon_rect.topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1] - 10)
                 self.state = 'skg'
                 self.cursor_sound.play()
+                self.reset_inputs()
 
             
         elif self.up_key and self.allowInput:
             if self.state == 'skg':
-                self.icon_rect.topleft = (self.m00n_pos[0] + self.offset, self.m00n_pos[1])
+                self.icon_image = pygame.image.load("assets/images/ui/life-icon-m00n.png")
+                self.icon_rect.topleft = (self.m00n_pos[0] + self.offset, self.m00n_pos[1] - 10)
                 self.state = 'm00n'
                 self.cursor_sound.play()
+                self.reset_inputs()
 
             
             elif self.state == 'm00n':
-                self.icon_rect.topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1])
+                self.icon_image = pygame.image.load("assets/images/ui/life-icon-skg.png")
+                self.icon_rect.topleft = (self.skg_pos[0] + self.offset, self.skg_pos[1] - 10)
                 self.state = 'skg'
                 self.cursor_sound.play()
+                self.reset_inputs()
 
 
     def run(self):

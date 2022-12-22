@@ -54,7 +54,7 @@ def import_cut_graphics(path):
 
 def save_data(score, name):
 
-    file = open('data/scores.csv', "a", newline="")
+    file = open('assets/data/scores.csv', "a", newline="")
 
     data = (score, name)
     data_writer = writer(file)

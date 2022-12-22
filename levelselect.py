@@ -55,9 +55,9 @@ class Overworld:
         self.display = surface
 
         #Audio
-        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.ogg")
+        self.cursor_sound = pygame.mixer.Sound("assets/audio/sfx/move_cursor.wav")
         self.cursor_sound.set_volume(0.5)
-        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.ogg")
+        self.select_sound = pygame.mixer.Sound("assets/audio/sfx/select.wav")
         self.select_sound.set_volume(0.5)
 
         #Level Logic
